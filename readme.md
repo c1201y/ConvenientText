@@ -1,5 +1,7 @@
 > 该项目移植自 https://github.com/Tiny-Nick/ConvenientText 的适配 classisland1.7.0.1的版本
 
+> 本项目有人类构建
+![text]()
 # ClassIsland 的快捷文本编辑插件移植版
 
 ## 食用方法
