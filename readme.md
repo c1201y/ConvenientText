@@ -1,0 +1,37 @@
+> 该项目移植自 https://github.com/Tiny-Nick/ConvenientText 的适配 classisland1.7.0.1的版本
+
+# ClassIsland 的快捷文本编辑插件
+
+## 食用方法
+
+- 装好插件后，在设置 → 组件里把「便捷文本」拖到主界面上
+- 桌面上会出现一个灰色圆 ✎ 按钮，点一下弹出编辑框
+- 改文字、选颜色、调字号，点确定，主界面立刻变
+
+## 兼容性
+
+- ClassIsland 1.7.0.0
+- Windows 7 / 10 / 11
+
+
+> 理论上 Linux/macOS 也能跑，没测过，但是提交的 yml 中只标注了 Windows，所以Linux 和 MacOS 端的可能需要网盘手动下载
+
+## 作者
+
+椰汁
+
+- 作者主页：https://home.162614.xyz
+- 网盘: https://pan.132614.xyz
+- Github仓库：https://github.com/c1201y/ConvenientText
+
+> 本插件代码由 AI （98%+）生成，如果遇到Bug欢迎去往issue反馈，目前会保持支持维护。
+
+# 更新日志
+
+## 1.0.0.0
+
+- 项目移植基本完成
+
+# 许可证
+
+MIT License © 椰汁
