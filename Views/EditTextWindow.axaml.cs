@@ -161,7 +161,12 @@ _colorCombo.SelectionChanged += (_, _) => UpdateColorPreview();
             row1.Children.Add(contentLabel);
             row1.Children.Add(_inputBox);
 
-            var row2 = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
+           var row2 = new StackPanel 
+            { 
+            Orientation = Orientation.Horizontal, 
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Margin = new Thickness(0, 0, 10, 0)  // 右边距 10，按钮整体左移
+            };
             row2.Children.Add(cancelBtn);
             row2.Children.Add(confirmBtn);
 

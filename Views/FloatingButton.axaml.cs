@@ -1,4 +1,5 @@
-﻿using ConvenientText.Models;
+﻿using System.IO;
+using ConvenientText.Models;
 using ConvenientText.Services;
 using System;
 using System.Windows;
@@ -107,8 +108,52 @@ public partial class FloatingButton : Window
 
         // 悬停效果
         rootGrid.MouseEnter += (_, _) => backgroundEllipse.Fill = hoverBrush;
-        rootGrid.MouseLeave += (_, _) => backgroundEllipse.Fill = normalBrush;
-
+        rootGrid.MouseLeave += (_, _) => backgroundEllipse.Fill = normalBrush;  
         Content = rootGrid;
+        LoadWindowPosition();
+        Closing += (_, _) => SaveWindowPosition();
     }
+    private void LoadWindowPosition()
+{
+    string file = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ConvenientText", "pos.json");
+    if (System.IO.File.Exists(file))
+    {
+        try
+        {
+            string json = System.IO.File.ReadAllText(file);
+            var pos = System.Text.Json.JsonSerializer.Deserialize<PositionData>(json);
+            if (pos != null)
+            {
+                double screenW = SystemParameters.WorkArea.Width;
+                double screenH = SystemParameters.WorkArea.Height;
+                Left = Math.Max(0, Math.Min(pos.Left, screenW - Width));
+                Top = Math.Max(0, Math.Min(pos.Top, screenH - Height));
+                return;
+            }
+        }
+        catch { }
+    }
+    Left = SystemParameters.WorkArea.Width - Width - 20;
+    Top = SystemParameters.WorkArea.Height - Height - 20;
+}
+
+private void SaveWindowPosition()
+{
+    try
+    {
+        string dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ConvenientText");
+        System.IO.Directory.CreateDirectory(dir);
+        string file = System.IO.Path.Combine(dir, "pos.json");
+        var data = new PositionData { Left = this.Left, Top = this.Top };
+        string json = System.Text.Json.JsonSerializer.Serialize(data);
+        System.IO.File.WriteAllText(file, json);
+    }
+    catch { }
+}
+
+private class PositionData
+{
+    public double Left { get; set; }
+    public double Top { get; set; }
+}
 }
