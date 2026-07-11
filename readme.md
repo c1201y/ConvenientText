@@ -1,13 +1,14 @@
-![text](https://free.picui.cn/free/2026/07/11/6a51f1b559fdc.jpg)
+<div align="center">
+<img src="https://free.picui.cn/free/2026/07/11/6a51f1b559fdc.jpg" alt="text" width="300" />
+</div>
 
 # ClassIsland 的快捷文本编辑插件移植版
 
 > 该项目移植自 https://github.com/Tiny-Nick/ConvenientText 的适配 classisland1.7.0.1的版本
 
-> 本项目有人类构建
+> 本项目由人类构建
 
 ## 食用方法
-
 - 装好插件后，在设置 → 组件里把「便捷文本」拖到主界面上
 - 桌面上会出现一个灰色圆 ✎ 按钮，点一下弹出编辑框
 - 改文字、选颜色、调字号，点确定，主界面立刻变
