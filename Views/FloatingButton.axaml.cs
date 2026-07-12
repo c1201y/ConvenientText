@@ -93,7 +93,7 @@ public partial class FloatingButton : Window
             {
                 try
                 {
-                    var editWindow = new EditTextWindow(_dataModel) { Topmost = true };
+                    var editWindow = new EditTextWindow(_dataModel,_storage) { Topmost = true };
                     editWindow.Show();
                     _storage.Save(_dataModel);
                 }

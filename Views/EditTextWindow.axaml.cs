@@ -3,12 +3,14 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Collections.Generic;
 using ConvenientText.Models;
+using ConvenientText.Services;  
 
 namespace ConvenientText.Views
 {
     public partial class EditTextWindow : Window
     {
         private readonly TextDataModel _dataModel;
+        private readonly DataStorageService _storage;   // 👈 添加这一行
         private readonly TextBox _inputBox;
         private readonly ComboBox _colorCombo;
         private readonly Slider _fontSizeSlider;
@@ -25,9 +27,10 @@ namespace ConvenientText.Views
             new("浅灰", Colors.LightGray)
         };
 
-        public EditTextWindow(TextDataModel dataModel)
+        public EditTextWindow(TextDataModel dataModel, DataStorageService storage)
         {
             _dataModel = dataModel;
+            _storage = storage;
 
             Title = "文本编辑";
             Width = 520;
@@ -198,6 +201,7 @@ _colorCombo.SelectionChanged += (_, _) => UpdateColorPreview();
             _dataModel.DisplayText = _inputBox.Text ?? string.Empty;
             _dataModel.TextColor = (_colorCombo.SelectedItem as ColorOption)?.Color ?? Colors.White;
             _dataModel.FontSize = _fontSizeSlider.Value;
+            _storage.Save(_dataModel);
             Close();
         }
 
