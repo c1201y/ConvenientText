@@ -27,7 +27,7 @@ public partial class ConvenientTextSettingsControl : UserControl
                 },
                 new TextBlock
                 {
-                    Text = "编辑窗口会根据系统深色模式自动切换背景和控件样式。",
+                    Text = "编辑窗口始终使用深色主题。",
                     TextWrapping = TextWrapping.Wrap,
                     Margin = new Thickness(0, 0, 0, 6)
                 },
