@@ -18,11 +18,24 @@ namespace ConvenientText;
 [PluginEntrance]
 public class Plugin : PluginBase
 {
+    public static ShutdownSettings ShutdownSettings { get; } = new();
+
     public override void Initialize(HostBuilderContext context, IServiceCollection services)
     {
         services.AddSingleton<TextDataModel>();
         services.AddSingleton<DataStorageService>();
         services.AddComponent<ConvenientTextComponent, ConvenientTextSettingsControl>();
+        services.AddSettingsPage<ShutdownSettingsControl>();
+        services.AddAction("convenienttext.timedshutdown", "计时关机", MaterialDesignThemes.Wpf.PackIconKind.Power, (settings, param) =>
+        {
+            Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var seconds = ShutdownSettings.TotalSeconds;
+                if (seconds <= 0) seconds = 1800;
+                var win = new ShutdownWindow(seconds);
+                win.Show();
+            }));
+        });
         services.AddHostedService<FloatingWindowHostedService>();
     }
 
