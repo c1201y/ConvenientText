@@ -42,9 +42,8 @@ namespace ConvenientText.Views
             WindowStyle = WindowStyle.SingleBorderWindow;
             Background = Brushes.Transparent;
 
-            var isDark = IsSystemDarkMode();
-            var foregroundBrush = isDark ? Brushes.White : Brushes.Black;
-            var inputBackground = isDark ? new SolidColorBrush(Color.FromRgb(40, 40, 40)) : Brushes.White;
+            var foregroundBrush = Brushes.White;
+            var inputBackground = new SolidColorBrush(Color.FromRgb(40, 40, 40));
             var buttonBackground = new SolidColorBrush(Color.FromRgb(64, 64, 64));
             var buttonHoverBackground = new SolidColorBrush(Color.FromRgb(84, 84, 84));
 
@@ -54,7 +53,7 @@ namespace ConvenientText.Views
                 Margin = new Thickness(0, 0, 10, 0),
                 Background = inputBackground,
                 Foreground = foregroundBrush,
-                BorderBrush = isDark ? new SolidColorBrush(Color.FromRgb(80, 80, 80)) : new SolidColorBrush(Color.FromRgb(200, 200, 200))
+                BorderBrush = new SolidColorBrush(Color.FromRgb(80, 80, 80))
             };
 
             _colorCombo = new ComboBox
@@ -64,7 +63,7 @@ namespace ConvenientText.Views
                 ItemsSource = _colorOptions,
                 Background = inputBackground,
                 Foreground = foregroundBrush,
-                BorderBrush = isDark ? new SolidColorBrush(Color.FromRgb(80, 80, 80)) : new SolidColorBrush(Color.FromRgb(200, 200, 200))
+                BorderBrush = new SolidColorBrush(Color.FromRgb(80, 80, 80))
             };
             _colorCombo.SelectedItem = _colorOptions.Find(item => item.Color == _dataModel.TextColor) ?? _colorOptions[0];
 // 颜色预览方块
@@ -180,20 +179,6 @@ _colorCombo.SelectionChanged += (_, _) => UpdateColorPreview();
             dock.Children.Add(row2);
             Content = dock;
             Background = inputBackground;
-        }
-
-        private static bool IsSystemDarkMode()
-        {
-            try
-            {
-                const string personalizeKey = "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
-                var value = Microsoft.Win32.Registry.GetValue(personalizeKey, "AppsUseLightTheme", 1);
-                return value is int intValue && intValue == 0;
-            }
-            catch
-            {
-                return false;
-            }
         }
 
         private void OnConfirmClick(object? sender, RoutedEventArgs e)
