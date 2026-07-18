@@ -8,6 +8,7 @@ using ConvenientText.Services;
 using ConvenientText.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,12 +20,24 @@ namespace ConvenientText;
 public class Plugin : PluginBase
 {
     public static ShutdownSettings ShutdownSettings { get; } = new();
+    public static SchoolStatsSettings SchoolStatsSettings { get; } = new();
+    public static DutyRotaSettings DutyRotaSettings { get; } = new();
+    public static HolidayService HolidayService { get; } = new();
+    public static SettingsStorageService SettingsStorage { get; } = new();
 
     public override void Initialize(HostBuilderContext context, IServiceCollection services)
     {
+        LoadSettings();
+        SetupAutoSave();
+
         services.AddSingleton<TextDataModel>();
         services.AddSingleton<DataStorageService>();
+        services.AddSingleton<SchoolStatsSettings>(SchoolStatsSettings);
+        services.AddSingleton<DutyRotaSettings>(DutyRotaSettings);
+        services.AddSingleton<HolidayService>(HolidayService);
         services.AddComponent<ConvenientTextComponent, ConvenientTextSettingsControl>();
+        services.AddComponent<SchoolStatsComponent>();
+        services.AddComponent<DutyRotaComponent>();
         services.AddSettingsPage<ShutdownSettingsControl>();
         services.AddAction("convenienttext.timedshutdown", "计时关机", MaterialDesignThemes.Wpf.PackIconKind.Power, (settings, param) =>
         {
@@ -35,6 +48,54 @@ public class Plugin : PluginBase
             }));
         });
         services.AddHostedService<FloatingWindowHostedService>();
+        services.AddHostedService<HolidayUpdateHostedService>();
+    }
+
+    private static void LoadSettings()
+    {
+        var saved = SettingsStorage.LoadShutdown();
+        ShutdownSettings.Hours = saved.Hours;
+        ShutdownSettings.Minutes = saved.Minutes;
+        ShutdownSettings.Delay = saved.Delay;
+        ShutdownSettings.Reminder = saved.Reminder;
+        ShutdownSettings.NoBeep = saved.NoBeep;
+        ShutdownSettings.NoShake = saved.NoShake;
+        ShutdownSettings.Force = saved.Force;
+        ShutdownSettings.HideCancel = saved.HideCancel;
+
+        var statsSaved = SettingsStorage.LoadSchoolStats();
+        SchoolStatsSettings.SemesterStart = statsSaved.SemesterStart;
+        SchoolStatsSettings.SemesterEnd = statsSaved.SemesterEnd;
+        SchoolStatsSettings.IsDetailedMode = statsSaved.IsDetailedMode;
+        SchoolStatsSettings.AutoUpdateHolidays = statsSaved.AutoUpdateHolidays;
+
+        var dutySaved = SettingsStorage.LoadDutyRota();
+        DutyRotaSettings.StartDate = dutySaved.StartDate;
+        DutyRotaSettings.Interval = dutySaved.Interval;
+        DutyRotaSettings.Names = dutySaved.Names;
+    }
+
+    private static void SetupAutoSave()
+    {
+        ShutdownSettings.PropertyChanged += (_, _) => SettingsStorage.SaveShutdown(ShutdownSettings);
+        SchoolStatsSettings.PropertyChanged += (_, _) => SettingsStorage.SaveSchoolStats(SchoolStatsSettings);
+        DutyRotaSettings.PropertyChanged += (_, _) => SettingsStorage.SaveDutyRota(DutyRotaSettings);
+    }
+
+    private class HolidayUpdateHostedService : IHostedService
+    {
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            if (!SchoolStatsSettings.AutoUpdateHolidays) return Task.CompletedTask;
+            Application.Current?.Dispatcher.BeginInvoke(async () =>
+            {
+                try { await HolidayService.UpdateFromApiAsync(); }
+                catch { HolidayService.Load(); }
+            });
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 
     private class FloatingWindowHostedService : IHostedService

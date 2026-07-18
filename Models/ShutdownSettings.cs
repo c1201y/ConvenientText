@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 using System.Runtime.CompilerServices;
 
 namespace ConvenientText.Models;
@@ -62,6 +63,7 @@ public class ShutdownSettings : INotifyPropertyChanged
         set { _hideCancel = value; OnPropertyChanged(); }
     }
 
+    [JsonIgnore]
     public int TotalSeconds => Hours * 3600 + Minutes * 60;
 
     public event PropertyChangedEventHandler? PropertyChanged;
