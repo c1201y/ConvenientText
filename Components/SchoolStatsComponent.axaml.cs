@@ -7,13 +7,14 @@ using ClassIsland.Core.Attributes;
 using ClassIsland.Shared;
 using ConvenientText.Models;
 using ConvenientText.Services;
+using MaterialDesignThemes.Wpf;
 
 namespace ConvenientText.Components;
 
 [ComponentInfo(
     "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
     "在校日统计",
-    "\uE787",
+    PackIconKind.CalendarClockOutline,
     "显示学期在校日统计和进度")]
 public partial class SchoolStatsComponent : ComponentBase<SchoolStatsSettings>
 {
@@ -68,7 +69,9 @@ public partial class SchoolStatsComponent : ComponentBase<SchoolStatsSettings>
         stack.Children.Add(_infoText);
         stack.Children.Add(_progressBg);
 
-        Content = stack;
+        var container = new Grid { VerticalAlignment = VerticalAlignment.Center };
+        container.Children.Add(stack);
+        Content = container;
         ((FrameworkElement)Content).SizeChanged += (_, _) => UpdateProgressBar();
     }
 

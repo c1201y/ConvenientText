@@ -103,7 +103,7 @@ public class ShutdownSettingsControl : SettingsPageBase
             BuildDutyDatePicker(fg, inputBg)));
         stack.Children.Add(BuildCard("轮换间隔", "每隔多少天轮换一次", "\uE777", fg, cardBg,
             BuildIntervalInput(fg, inputBg)));
-        stack.Children.Add(BuildCard("偏移调整", "调整本周对应的值日生序号", "\uE8D2", fg, cardBg,
+        stack.Children.Add(BuildCard("偏移调整", "调整本周对应的值日生序号，正数往后移", "\uE8D2", fg, cardBg,
             BuildOffsetInput(fg, inputBg)));
         stack.Children.Add(BuildCard("值日生名单", "按顺序添加，按天轮换", "\uE77B", fg, cardBg,
             BuildNameSection(fg, inputBg)));
@@ -413,7 +413,7 @@ public class ShutdownSettingsControl : SettingsPageBase
         };
         var s = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
         s.Children.Add(box);
-        s.Children.Add(new TextBlock { Text = " 人", Foreground = fg, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(4, 0, 0, 0) });
+        s.Children.Add(new TextBlock { Text = " 位", Foreground = fg, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(4, 0, 0, 0) });
         return s;
     }
 

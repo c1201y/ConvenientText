@@ -6,13 +6,14 @@ using ClassIsland.Core.Abstractions.Controls;
 using ClassIsland.Core.Attributes;
 using ClassIsland.Shared;
 using ConvenientText.Models;
+using MaterialDesignThemes.Wpf;
 
 namespace ConvenientText.Components;
 
 [ComponentInfo(
     "B2C3D4E5-F6A7-8901-BCDE-F12345678901",
     "值日轮换",
-    "\uE716",
+    PackIconKind.AccountGroupOutline,
     "按天数自动轮换值日生")]
 public partial class DutyRotaComponent : ComponentBase<DutyRotaSettings>
 {
