@@ -9,6 +9,7 @@ public class DutyRotaSettings : INotifyPropertyChanged
 {
     private DateTime _startDate = DateTime.Today;
     private int _interval = 1;
+    private int _offset;
     private List<string> _names = new();
 
     public DateTime StartDate
@@ -23,6 +24,12 @@ public class DutyRotaSettings : INotifyPropertyChanged
         set { _interval = Math.Max(1, value); OnPropertyChanged(); }
     }
 
+    public int Offset
+    {
+        get => _offset;
+        set { _offset = value; OnPropertyChanged(); }
+    }
+
     public List<string> Names
     {
         get => _names;
@@ -35,7 +42,7 @@ public class DutyRotaSettings : INotifyPropertyChanged
         var days = (DateTime.Today - _startDate.Date).Days;
         if (days < 0) return _names[0];
         var slot = days / _interval;
-        var index = ((slot % _names.Count) + _names.Count) % _names.Count;
+        var index = ((slot + _offset) % _names.Count + _names.Count) % _names.Count;
         return _names[index];
     }
 
@@ -45,7 +52,7 @@ public class DutyRotaSettings : INotifyPropertyChanged
         var days = (date.Date - _startDate.Date).Days;
         if (days < 0) return _names[0];
         var slot = days / _interval;
-        var index = ((slot % _names.Count) + _names.Count) % _names.Count;
+        var index = ((slot + _offset) % _names.Count + _names.Count) % _names.Count;
         return _names[index];
     }
 

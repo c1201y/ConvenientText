@@ -103,6 +103,8 @@ public class ShutdownSettingsControl : SettingsPageBase
             BuildDutyDatePicker(fg, inputBg)));
         stack.Children.Add(BuildCard("轮换间隔", "每隔多少天轮换一次", "\uE777", fg, cardBg,
             BuildIntervalInput(fg, inputBg)));
+        stack.Children.Add(BuildCard("偏移调整", "调整本周对应的值日生序号", "\uE8D2", fg, cardBg,
+            BuildOffsetInput(fg, inputBg)));
         stack.Children.Add(BuildCard("值日生名单", "按顺序添加，按天轮换", "\uE77B", fg, cardBg,
             BuildNameSection(fg, inputBg)));
         stack.Children.Add(BuildDutyPreviewCard(fg, cardBg));
@@ -394,6 +396,27 @@ public class ShutdownSettingsControl : SettingsPageBase
         return s;
     }
 
+    private UIElement BuildOffsetInput(Brush fg, Brush inputBg)
+    {
+        var box = new TextBox
+        {
+            Text = _duty.Offset.ToString(), Width = 56, Height = 32, MaxLength = 4,
+            FontSize = 14, Foreground = fg, Background = inputBg,
+            BorderBrush = new SolidColorBrush(Color.FromRgb(80, 80, 80)),
+            BorderThickness = new Thickness(1), TextAlignment = TextAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center
+        };
+        box.TextChanged += (_, _) =>
+        {
+            if (int.TryParse(box.Text, out int v)) _duty.Offset = v;
+            RefreshPreview();
+        };
+        var s = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+        s.Children.Add(box);
+        s.Children.Add(new TextBlock { Text = " 人", Foreground = fg, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(4, 0, 0, 0) });
+        return s;
+    }
+
     private UIElement BuildNameSection(Brush fg, Brush inputBg)
     {
         _nameList = new StackPanel();
@@ -438,26 +461,6 @@ public class ShutdownSettingsControl : SettingsPageBase
                 Text = $"{i + 1}. {name}", FontSize = 13, Foreground = fg,
                 VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 2, 8, 2), MinWidth = 80
             };
-            var upBtn = MakeSmallButton("上", fg);
-            upBtn.Click += (_, _) =>
-            {
-                if (idx > 0)
-                {
-                    (_duty.Names[idx], _duty.Names[idx - 1]) = (_duty.Names[idx - 1], _duty.Names[idx]);
-                    RefreshNameList();
-                    RefreshPreview();
-                }
-            };
-            var downBtn = MakeSmallButton("下", fg);
-            downBtn.Click += (_, _) =>
-            {
-                if (idx < _duty.Names.Count - 1)
-                {
-                    (_duty.Names[idx], _duty.Names[idx + 1]) = (_duty.Names[idx + 1], _duty.Names[idx]);
-                    RefreshNameList();
-                    RefreshPreview();
-                }
-            };
             var delBtn = MakeSmallButton("删", fg);
             delBtn.Click += (_, _) =>
             {
@@ -467,8 +470,6 @@ public class ShutdownSettingsControl : SettingsPageBase
             };
             var row = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
             row.Children.Add(label);
-            row.Children.Add(upBtn);
-            row.Children.Add(downBtn);
             row.Children.Add(delBtn);
             _nameList.Children.Add(row);
         }

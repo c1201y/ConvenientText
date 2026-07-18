@@ -12,7 +12,7 @@ namespace ConvenientText.Components;
 [ComponentInfo(
     "9E7F8A2D-4C1B-4E5F-9A3C-7D8B2E1F0A3C",
     "便捷文本",
-    "\uE9B0",
+    "\uE8D2",
     "可通过悬浮窗快速修改文字")]
 public partial class ConvenientTextComponent : ComponentBase<TextDataModel>
 {
